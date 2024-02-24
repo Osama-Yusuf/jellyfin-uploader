@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="container max-w-md mx-auto">
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="mb-4 text-xl font-bold text-center">Upload File</h2>
+            <form id="uploadForm" class="space-y-4" enctype="multipart/form-data">
+                <div>
+                    <input type="file" name="file" required
+                        class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent">
+                </div>
+                <div>
+                    <select id="directorySelect" name="directory"
+                        class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent"></select>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                    <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <div>
+                    <button type="submit"
+                        class="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg border border-transparent hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Upload
+                        File</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/list-directories')
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('directorySelect');
+                    data.forEach(dir => {
+                        let option = document.createElement('option');
+                        option.value = dir;
+                        option.textContent = dir;
+                        select.appendChild(option);
+                    });
+                });
+    
+            document.getElementById('uploadForm').onsubmit = function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/upload', true);
+    
+                xhr.upload.onprogress = function(event) {
+                    if (event.lengthComputable) {
+                        const percentComplete = Math.round((event.loaded / event.total) * 100);
+                        document.getElementById('progressBar').style.width = percentComplete + '%';
+                    }
+                };
+    
+                xhr.onload = function() {
+                    if (xhr.status == 200) {
+                        alert('File uploaded successfully');
+                        document.getElementById('progressBar').style.width = '0%'; // Reset progress bar
+                    } else {
+                        alert('Upload failed');
+                    }
+                };
+    
+                xhr.onerror = function() {
+                    alert('Upload error');
+                };
+    
+                xhr.send(formData);
+            };
+        });
+    </script>    
+</body>
+
+</html>

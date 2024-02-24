@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  pyload:
+    # image: pyload2:2
+    build: .
+    container_name: pyload-2
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./downloads:/app/downloads
+    environment:
+      FLASK_APP: app.py
+      FLASK_RUN_HOST: 0.0.0.0
+    restart: unless-stopped
+
+# and i want the upoad to be fast when other lan devices are trying to upload
+# i want to see the uploaded fiels 
+# auth system
