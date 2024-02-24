@@ -12,7 +12,7 @@ Upload media from anywhere on your device or from other devices on your network 
 
 Requirements:
 - [Docker](https://docs.docker.com/engine/install/) 
-- [Docker Compose](https://docs.docker.com/compose/install/) (Optional)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### Basic
 - To run the jellyfin uploader on top of docker just clone the repo and deploy it with docker-compose as follows:
@@ -20,5 +20,12 @@ Requirements:
         git clone https://github.com/Osama-Yusuf/jellyfin-uploader.git
         cd jellyfin-uploader
         docker-compose up -d --build
+    ```
+- To run the jellyfin uploader without docker, using your host python to run it do the following steps:
+    ```bash
+        git clone https://github.com/Osama-Yusuf/jellyfin-uploader.git
+        cd jellyfin-uploader
+        RUN pip3 install --no-cache-dir -r requirements.txt
+        flask run # Or python3 app.py 
     ```
 jellyfin-uploader is now running on http://localhost:5005
